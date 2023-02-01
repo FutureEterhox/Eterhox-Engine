@@ -27,7 +27,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var eterhoxver:String = '0.0.1'; //This is also used for Discord RPC
+	public static var eterhoxver:String = '0.0.3'; //This is also used for Discord RPC
 
 	var menuItems:MainMenuList;
 
