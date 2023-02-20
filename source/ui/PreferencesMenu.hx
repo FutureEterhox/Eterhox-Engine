@@ -57,7 +57,6 @@ class PreferencesMenu extends Page
 		preferenceCheck('camera-zoom', true);
 		preferenceCheck('fps-counter', true);
 		preferenceCheck('auto-pause', false);
-		preferenceCheck('master-volume', 1);
 		if (!getPref('fps-counter'))
 		{
 			Lib.current.stage.removeChild(Main.fpsCounter);
@@ -70,7 +69,7 @@ class PreferencesMenu extends Page
 		if (preferences.get(identifier) == null)
 		{
 			preferences.set(identifier, defaultValue);
-			trace('set preference!');
+			trace('Set option!');
 		}
 		else
 		{
