@@ -39,7 +39,7 @@ using StringTools;
 class TitleState extends MusicBeatState
 {
 	public static var updateVersion:String = '';
-	public static var curVersion:String = '0.0.1';
+	public static var curVersion:String = '0.0.5';
 	public static var initialized:Bool = false;
 	
 	var blackScreen:FlxSprite;
@@ -247,16 +247,14 @@ class TitleState extends MusicBeatState
 
 		// credTextShit.alignment = CENTER;
 
-		credTextShit.visible = false;
-
 		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('newgrounds_logo'));
 		add(ngSpr);
-		ngSpr.visible = false;
-		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
-		ngSpr.updateHitbox();
-		ngSpr.screenCenter(X);
+		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8), Std.int(ngSpr.height * 0.8));
 		ngSpr.antialiasing = true;
-
+		ngSpr.screenCenter(X);
+		ngSpr.visible = false;
+		credTextShit.visible = false;
+		
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
 		FlxG.mouse.visible = false;
@@ -361,34 +359,44 @@ class TitleState extends MusicBeatState
 
 			FlxG.camera.flash(FlxColor.WHITE, 1);
 			FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
-
+			
 			transitioning = true;
 			// FlxG.sound.music.stop();
-
+			
 			// Check if version is outdated
+			{
+				trace("Checking Eterhox Engine's Github page");
+				var http = new haxe.Http("https://raw.githubusercontent.com/Bloxee/Eterhox-Engine/main/verBuild");
+				var returnedData:Array<String> = [];
+			
+				http.onData = function(data:String)
 				{
-					trace("Checking Eterhox Engine's Github page");
-					var http = new haxe.Http("https://raw.githubusercontent.com/Bloxee/Eterhox-Engine/main/verBuild");
-					var returnedData:Array<String> = [];
-	
-					http.onData = function(data:String)
-					{
-						updateVersion = data.split('\n')[0].trim(); // Got this from Psych Engine
-						var curVersion:String = MainMenuState.eterhoxver.trim();
-						trace('Version on Github: ' + updateVersion + ', Current Engine version: ' + curVersion);
-						if(updateVersion != curVersion) {
-							trace('This engine is old!');
-							FlxG.switchState(new OutdatedSubState()); 
-						}
-					}
-						http.onError = function(error)
-						{
-							trace('Unable to detect an update - Error Message: $error');
+					updateVersion = data.split('\n')[0].trim(); // Got this from Psych Engine
+					var curVersion:String = MainMenuState.eterhoxVer.trim();
+					trace('Version on Github: ' + updateVersion + ', Current Engine version: ' + curVersion);
+					if (updateVersion != curVersion) {
+						if (updateVersion < curVersion) {
+							// If the current engine version is higher than the version fetched from Github,
+							// skip the OutdatedSubState and go straight to the MainMenuState.
 							FlxG.switchState(new MainMenuState());
+							trace('Hold on...wait a minute, some shit just happened here.');
+						} else {
+							FlxG.switchState(new OutdatedSubState());
+							trace('This engine is old!');
 						}
-		
-						http.request();
-					};
+					} else {
+						FlxG.switchState(new MainMenuState());
+						trace('Hold on...wait a minute, some shit just happened here.');
+					}
+				}
+				http.onError = function(error)
+				{
+					trace('Unable to detect an update - Error Message: $error');
+					FlxG.switchState(new MainMenuState());
+				}
+			
+				http.request();
+			};
 					
 					if (updateVersion == curVersion)
 						// Eterhox can't detect a new update
@@ -414,16 +422,16 @@ class TitleState extends MusicBeatState
 	}
 
 	function createCoolText(textArray:Array<String>)
-	{
-		for (i in 0...textArray.length)
 		{
+		  for (i in 0...textArray.length)
+		  {
 			var money:Alphabet = new Alphabet(0, 0, textArray[i], true, false);
 			money.screenCenter(X);
 			money.y += (i * 60) + 200;
 			credGroup.add(money);
 			textGroup.add(money);
+		  }
 		}
-	}
 
 	function addMoreText(text:String)
 	{
@@ -520,15 +528,12 @@ class TitleState extends MusicBeatState
 
 	var skippedIntro:Bool = false;
 
-	function skipIntro():Void
-	{
-		if (!skippedIntro)
-		{
-			remove(ngSpr);
-
-			FlxG.camera.flash(FlxColor.WHITE, 4);
-			remove(credGroup);
-			skippedIntro = true;
-		}
+	function skipIntro():Void {
+    if (skippedIntro) return;
+    
+    skippedIntro = true;
+    remove(ngSpr);
+    FlxG.camera.flash(FlxColor.WHITE, 4);
+    credGroup.kill();
 	}
 }
