@@ -79,20 +79,18 @@ class LoadingState extends MusicBeatState
 	}
 	
 	function checkLoadSong(path:String)
-	{
-		if (!Assets.cache.hasSound(path))
 		{
+		  if (!Assets.cache.hasSound(path))
+		  {
 			var library = Assets.getLibrary("songs");
 			final symbolPath = path.split(":").pop();
-			// @:privateAccess
-			// library.types.set(symbolPath, SOUND);
-			// @:privateAccess
-			// library.pathGroups.set(symbolPath, [library.__cacheBreak(symbolPath)]);
 			var callback = callbacks.add("song:" + path);
-			Assets.loadSound(path).onComplete(function (_) { callback(); });
-		}
-	}
-	
+			var soundAsset = Assets.loadSound(path);
+			soundAsset.onComplete(function (_) { 
+			  callback(); 
+			});
+		  }
+		}		
 	function checkLibrary(library:String)
 	{
 		trace(Assets.hasLibrary(library));
