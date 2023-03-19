@@ -85,8 +85,4 @@ class Main extends Sprite
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, #if (flixel < "5.0.0") zoom, #end framerate, framerate, skipSplash, startFullscreen));                      
 				
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96
