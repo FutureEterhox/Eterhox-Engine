@@ -39,7 +39,11 @@ using StringTools;
 class TitleState extends MusicBeatState
 {
 	public static var updateVersion:String;
+<<<<<<< HEAD
 	public static var curVersion:String = '0.4.2';
+=======
+	public static var curVersion:String = '0.3.0';
+>>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96
 	public static var initialized:Bool = false;
 	
 	var blackScreen:FlxSprite;
@@ -520,4 +524,8 @@ class TitleState extends MusicBeatState
 				skippedIntro = true;
 			}
 		}
+<<<<<<< HEAD
 	}
+=======
+	}
+>>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96

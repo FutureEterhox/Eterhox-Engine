@@ -120,4 +120,8 @@ class PlayerSettings
     static public function onGamepadAdded(pad:FlxGamepad):Void {
         player1.addGamepad(pad);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96

@@ -16,4 +16,8 @@ Notice: I'm learning Haxe. In fact, I have alot to learn about Haxe and JS. Ever
 - KadeDev -- [Kade Engine](https://github.com/KadeDev/Kade-Engine/)
 (trying to go based off Kade Engine)
 - ShadowMario -- [Psych Engine](https://github.com/ShadowMario/FNF-PsychEngine/)
+<<<<<<< HEAD
 (versionshit text and FPS)
+=======
+(versionshit text and FPS)
+>>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96

@@ -86,4 +86,8 @@ class OptionsMenu extends MusicBeatState
             }
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96
