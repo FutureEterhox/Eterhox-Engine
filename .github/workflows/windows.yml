@@ -1,55 +1,38 @@
-# This is a basic workflow to help you get started with Actions
+name: Windows Build 
 
-name: Windows Build CI
+on:
+  push:
+  pull_request:
 
-# Controls when the workflow will run
-on: [push, pull_request]
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: windows-latest
-    
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  build-and-test:
+    runs-on: windows-2019
+
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - uses: krdlab/setup-haxe@v1
-        with:
-          haxe-version: 4.2.5
-      # Runs a set of commands using the runners shell
-      - name: Haxelib Stuff
-        run: |
-          cinst haxe --version 4.2.5 -y
-          RefreshEnv
-          mkdir "%HAXELIB_ROOT%"
-          haxelib setup "%HAXELIB_ROOT%"
-          haxelib install lime
-          RefreshEnv
-          haxelib install openfl
-          haxelib install flixel
-          haxelib run lime setup flixel
-          haxelib run lime setup
-          RefreshEnv
-          haxelib install flixel-tools
-          haxelib install flixel-ui
-          haxelib install hscript
-          haxelib install flixel-addons
-          RefreshEnv
-          haxelib git faxe https://github.com/uhrobots/faxe
-          haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons.git
-          haxelib git polymod https://github.com/larsiusprime/polymod.git
-          RefreshEnv
-          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-          haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
-          haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
-          RefreshEnv
-          haxelib install actuate 
-          haxelib run lime build windows
-          
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Windows Build
-          path: export/release/windows/bin
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Haxe and dependencies
+      uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.2.5
+      run: |
+        choco install haxe --version 4.2.5 -y
+        mkdir "%HAXELIB_ROOT%"
+        haxelib setup "%HAXELIB_ROOT%"
+        haxelib install lime openfl flixel flixel-tools flixel-ui hscript flixel-addons polymod actuate
+        haxelib git faxe https://github.com/uhrobots/faxe
+        haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons.git
+        haxelib git polymod https://github.com/larsiusprime/polymod.git
+        haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+        haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
+        haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
+
+    - name: Build Windows target
+      run: haxelib run lime build windows
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Windows Build
+        path: export/release/windows/bin/
