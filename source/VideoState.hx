@@ -93,8 +93,4 @@ class VideoState extends MusicBeatState {
         Lib.current.stage.removeChild(overlay);
     }
     #end
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96

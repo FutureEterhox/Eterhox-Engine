@@ -194,8 +194,4 @@ class PauseSubState extends MusicBeatSubstate
 				// item.setGraphicSize(Std.int(item.width * ((item.targetY == 0) ? 1 : 0.8)));
 			}
 		}
-<<<<<<< HEAD
 	}		
-=======
-	}		
->>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96

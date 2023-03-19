@@ -11,10 +11,7 @@ class OptionsMenu extends Page {
         add(items);
         createItem('preferences', switchToPage(PageName.Preferences));
         createItem('controls', switchToPage(PageName.Controls));
-<<<<<<< HEAD
         createItem('audio offset', switchToPage(PageName.LatencyState)); // Audio Offset time
-=======
->>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96
         if (showDonate) createItem('donate', openDonatePage, true);
         createItem('exit', exit);
     }
@@ -36,7 +33,6 @@ class OptionsMenu extends Page {
     }
 
     private function switchToPage(pageName:PageName):Dynamic {
-<<<<<<< HEAD
         if (pageName == PageName.LatencyState) {
             return function() {
                 FlxG.switchState(new ui.LatencyState()); // Offset Time
@@ -49,13 +45,6 @@ class OptionsMenu extends Page {
         }
     }
     
-=======
-        return function() {
-            onSwitch.dispatch(pageName);
-        };
-    }
-
->>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96
     private function openDonatePage():Void {
         #if linux
         Sys.command('/usr/bin/xdg-open', ["https://github.com/bloxee/Eterhox-Engine", "&"]);
@@ -63,10 +52,6 @@ class OptionsMenu extends Page {
         FlxG.openURL('https://github.com/bloxee/Eterhox-Engine');
         #end
     }
-<<<<<<< HEAD
 
     public function setOptionAction(arg0:Int, arg1:() -> Void) {}
 }
-=======
-}
->>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96

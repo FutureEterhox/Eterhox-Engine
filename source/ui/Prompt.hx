@@ -89,8 +89,4 @@ class Prompt extends FlxSubState {
         field.text = text;
         field.screenCenter(X);
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96

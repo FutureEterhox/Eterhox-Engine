@@ -51,8 +51,4 @@ class Conductor {
         crochet = ((60 / bpm) * 1000);
         stepCrochet = crochet / 4;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5ca245dee3d35516523cfe6336374930698a0c96
