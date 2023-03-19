@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Eterhox Engine" file="EterhoxEngine" packageName="com.eternalstudio.eterhox" package="com.eternalstudio.eterhox" main="Main" version="0.2.8" company="Eternal Studio" />
+	<app title="Friday Night Funkin': Eterhox Engine" file="EterhoxEngine" packageName="com.eterhox.bloxe" package="com.eterhox.eterhox" main="Main" version="0.2.8" company="Bloxe Eterhox" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -171,8 +171,4 @@
 
 
 	<!-- <haxedef name="SKIP_TO_PLAYSTATE" if="debug" /> -->
-
-	<!--The Newgrounds version of FNF was built with 'ng' defined, and so will the port!-->
-	<haxedef name="ng" />
-	
 </project>
