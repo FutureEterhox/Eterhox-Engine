@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Created a Changelog in-game (OutdatedSubState.hx moment)
 - and in Github!
 - Improvements in certain files
+- The FNF logo now moves slowly (Code from Kade Engine)
 
 ### What's Removed?
 - Fullscreen (Yeah Fullscreen isn't it.)
@@ -27,3 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----------------------------
 Still learning how to code in Haxe, I'll get there, just not today of course.
+----------------------------
+
+# Credits
+KadeDev -- Kade Engine (trying to go based off Kade Engine)
+ShadowMario -- Psych Engine (versionshit text and FPS)
+
