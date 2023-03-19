@@ -70,11 +70,9 @@ class StoryMenuState extends MusicBeatState
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
-		if (FlxG.sound.music != null)
-		{
-			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-		}
+		var musicPath:String = Paths.music('freakyMenu');
+		if (FlxG.sound.music != null && !FlxG.sound.music.playing)
+			FlxG.sound.playMusic(musicPath);
 
 		persistentUpdate = persistentDraw = true;
 
@@ -93,10 +91,10 @@ class StoryMenuState extends MusicBeatState
 
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
 		var yellowBG:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 400, 0xFFF9CF51);
-
+	
 		grpWeekText = new FlxTypedGroup<MenuItem>();
 		add(grpWeekText);
-
+	
 		var blackBarThingie:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK);
 		add(blackBarThingie);
 
@@ -104,8 +102,6 @@ class StoryMenuState extends MusicBeatState
 
 		grpLocks = new FlxTypedGroup<FlxSprite>();
 		add(grpLocks);
-
-		trace("Line 70");
 		
 		#if desktop
 		// Updating Discord Rich Presence
