@@ -4,8 +4,22 @@ Eterhox Engine changelogs and stuff.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# 0.4.0 Update
 ### What's New?
+- Audio Offset (didn't make it but just enabled the code -- It's broken)
+- Input System improvements (Sustain notes may look odd -- Looking into it.)
+- Cleanup on PlayState and other files
+- last option in PauseSubState now says "Exit Song" 
+- Moved LatencyState (Audio Offset) to the UI folder instead 
 
+### What's Removed?
+- Nothing... (probably)
+
+### Coming Soon
+- Everything that I listed in the 0.3.0 update
+
+# 0.3.0 Update
+### What's New?
 - FPS Counter (not visible in game but in code)
 - Chart Editor fixes (I think??)
 - Options bg color change (not so fun or unique)
