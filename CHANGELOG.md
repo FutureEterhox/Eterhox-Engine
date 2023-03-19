@@ -26,4 +26,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - a good proper Options system
 
 ----------------------------
-##Still learning how to code in Haxe, I'll get there, just not today of course.
+Still learning how to code in Haxe, I'll get there, just not today of course.
