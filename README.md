@@ -8,3 +8,12 @@ Funkin' Links: **[itch.io](https://ninja-muffin24.itch.io/funkin) ⋅ [Newground
  
 ## Eterhox Engine
 Eterhox Engine is a beta personal project made by Bloxee. This project is expected to improve the game in every way possible. Take [Kade Engine](https://github.com/KadeDev/Kade-Engine/) for example.
+
+Notice: I'm learning Haxe. In fact, I have alot to learn about Haxe and JS. Everything in this mod is barebones so expect broken things here and there.
+
+
+# Credits
+- KadeDev -- [Kade Engine](https://github.com/KadeDev/Kade-Engine/)
+(trying to go based off Kade Engine)
+- ShadowMario -- [Psych Engine](https://github.com/ShadowMario/FNF-PsychEngine/)
+(versionshit text and FPS)
