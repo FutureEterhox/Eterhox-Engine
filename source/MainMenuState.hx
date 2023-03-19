@@ -17,6 +17,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import Std;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -25,38 +26,25 @@ import lime.app.Application;
 
 using StringTools;
 
-class MainMenuState extends MusicBeatState
-{
-	public static var eterhoxver:String = '0.0.3'; //This is also used for Discord RPC
-
+class MainMenuState extends MusicBeatState {
 	var menuItems:MainMenuList;
-
 	#if !switch
 	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
 	#else
 	var optionShit:Array<String> = ['story mode', 'freeplay'];
 	#end
-
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
-
-	override function create()
-	{
+	override function create() {
 		#if desktop
-		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Main Menus", null);
 		#end
-
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
-
-		if (!FlxG.sound.music.playing)
-		{
+		if (!FlxG.sound.music.playing) {
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		}
-
 		persistentUpdate = persistentDraw = true;
-
 		var bg:FlxSprite = new FlxSprite(null, null, Paths.image('menuBG'));
 		bg.scrollFactor.x = 0;
 		bg.scrollFactor.y = 0.17;
@@ -65,10 +53,8 @@ class MainMenuState extends MusicBeatState
 		bg.screenCenter();
 		bg.antialiasing = true;
 		add(bg);
-
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
-
 		magenta = new FlxSprite(null, null, Paths.image('menuDesat'));
 		magenta.scrollFactor.x = bg.scrollFactor.x;
 		magenta.scrollFactor.y = bg.scrollFactor.y;
@@ -79,44 +65,32 @@ class MainMenuState extends MusicBeatState
 		magenta.visible = false;
 		magenta.antialiasing = true;
 		magenta.color = 0xFFFD719B;
-		if (PreferencesMenu.preferences.get('flashing-menu'))
-		{
+		if (PreferencesMenu.preferences.get('flashing-menu')) {
 			add(magenta);
 		}
-		// magenta.scrollFactor.set();
-
 		menuItems = new MainMenuList();
 		add(menuItems);
 		menuItems.onChange.add(onMenuItemChange);
-		menuItems.onAcceptPress.add(function(item:MenuItem)
-		{
+		menuItems.onAcceptPress.add(function(item:MenuItem) {
 			FlxFlicker.flicker(magenta, 1.1, 0.15, false, true);
 		});
 		menuItems.enabled = false;
-		menuItems.createItem(null, null, "story mode", function()
-		{
+		menuItems.createItem(null, null, "story mode", function() {
 			startExitState(new StoryMenuState());
 		});
-		menuItems.createItem(null, null, "freeplay", function()
-		{
+		menuItems.createItem(null, null, "freeplay", function() {
 			startExitState(new FreeplayState());
 		});
-		if (VideoState.seenVideo)
-		{
+		if (VideoState.seenVideo) {
 			menuItems.createItem(null, null, "kickstarter", selectDonate, true);
-		}
-		else
-		{
+		} else {
 			menuItems.createItem(null, null, "donate", selectDonate, true);
 		}
-		menuItems.createItem(0, 0, "options", function()
-		{
+		menuItems.createItem(0, 0, "options", function() {
 			startExitState(new OptionsState());
 		});
-
 		var pos:Float = (FlxG.height - 160 * (menuItems.length - 1)) / 2;
-		for (i in 0...menuItems.length)
-		{
+		for (i in 0...menuItems.length) {
 			var item:MainMenuItem = menuItems.members[i];
 			item.x = FlxG.width / 2;
 			item.y = pos + (160 * i);
@@ -124,14 +98,15 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "Eterhox Engine v" + eterhoxver, 12);
-		versionShit.scrollFactor.set();
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(versionShit);
-		var versionShit:FlxText = new FlxText(12, FlxG.height - 24, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 12);
-		versionShit.scrollFactor.set();
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(versionShit);
+		var versionShit1:FlxText = new FlxText(12, FlxG.height - 44, 0, "Eterhox Engine v" + TitleState.curVersion, 12);
+		versionShit1.scrollFactor.set();
+		versionShit1.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(versionShit1);
+		
+		var versionShit2:FlxText = new FlxText(12, FlxG.height - 24, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 12);
+		versionShit2.scrollFactor.set();
+		versionShit2.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(versionShit2);		
 
 		super.create();
 	}
@@ -162,13 +137,9 @@ class MainMenuState extends MusicBeatState
 		menuItems.forEach(function(item:MainMenuItem)
 		{
 			if (menuItems.selectedIndex != item.ID)
-			{
 				FlxTween.tween(item, { alpha: 0 }, 0.4, { ease: FlxEase.quadOut });
-			}
 			else
-			{
 				item.visible = false;
-			}
 		});
 		new FlxTimer().start(0.4, function(tmr:FlxTimer)
 		{
@@ -178,24 +149,12 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		FlxG.camera.followLerp = CoolUtil.camLerpShit(0.06);
-
-		if (FlxG.sound.music.volume < 0.8)
-		{
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-		}
-
-		if (_exiting)
-		{
-			menuItems.enabled = false;
-		}
-
-		if (controls.BACK && menuItems.enabled && !menuItems.busy)
-		{
-			FlxG.switchState(new TitleState());
-		}
-
-		super.update(elapsed);
+	FlxG.camera.followLerp = CoolUtil.camLerpShit(0.06);
+	FlxG.sound.music.volume += 0.5 * FlxG.elapsed * (FlxG.sound.music.volume < 0.8 ? 1.0 : 0.0);
+    menuItems.enabled = !_exiting;
+    if (controls.BACK && menuItems.enabled && !menuItems.busy)
+        FlxG.switchState(new TitleState());
+    super.update(elapsed);
 	}
 }
 
