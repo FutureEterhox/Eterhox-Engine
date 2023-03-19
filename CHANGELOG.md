@@ -30,6 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Still learning how to code in Haxe, I'll get there, just not today of course.
 
 # Credits
-## KadeDev -- Kade Engine (trying to go based off Kade Engine)
-## ShadowMario -- Psych Engine (versionshit text and FPS)
+- KadeDev -- Kade Engine (trying to go based off Kade Engine)
+- ShadowMario -- Psych Engine (versionshit text and FPS)
 
