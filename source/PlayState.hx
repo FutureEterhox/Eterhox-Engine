@@ -1253,22 +1253,23 @@ class PlayState extends MusicBeatState
 	function startSong():Void
 	{
 		startingSong = false;
-
 		previousFrameTime = FlxG.game.ticks;
 		lastReportedPlayheadPosition = 0;
-
-		if (!paused)
+		
+		if (!paused) {
 			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
-		FlxG.sound.music.onComplete = endSong;
-		vocals.play();
-
-		#if desktop
-		// Song duration in a float, useful for the time left feature
-		songLength = FlxG.sound.music.length;
-
-		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC, true, songLength);
-		#end
+			FlxG.sound.music.onComplete = endSong;
+		
+			#if desktop
+			// Song duration in a float, useful for the time left feature
+			songLength = FlxG.sound.music.length;
+		
+			// Updating Discord Rich Presence (with Time Left)
+			DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC, true, songLength);
+			#end
+		}
+		
+		vocals.play();		
 	}
 
 	var debugNum:Int = 0;
