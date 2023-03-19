@@ -173,38 +173,25 @@ class PauseSubState extends MusicBeatSubstate
 		}
 	}
 
-	override function destroy()
-	{
-		pauseMusic.destroy();
-
-		super.destroy();
-	}
-
-	function changeSelection(change:Int = 0):Void
-	{
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = menuItems.length - 1;
-		if (curSelected >= menuItems.length)
-			curSelected = 0;
-
-		var bullShit:Int = 0;
-
-		for (item in grpMenuShit.members)
+	override function destroy() 
 		{
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = 0.6;
-			// item.setGraphicSize(Std.int(item.width * 0.8));
-
-			if (item.targetY == 0)
+			pauseMusic.destroy();
+			super.destroy();
+		}
+		
+		function changeSelection(change:Int = 0):Void 
+		{
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+			curSelected += change;
+		
+			curSelected = (curSelected < 0) ? menuItems.length - 1 : curSelected % menuItems.length;
+		
+			var bullshit:Int = 0;
+			for (item in grpMenuShit.members) 
 			{
-				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
+				item.targetY = bullshit++ - curSelected;
+				item.alpha = (item.targetY == 0) ? 1 : 0.6;
+				// item.setGraphicSize(Std.int(item.width * ((item.targetY == 0) ? 1 : 0.8)));
 			}
 		}
-	}
-}
+	}		
