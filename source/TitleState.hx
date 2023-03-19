@@ -39,7 +39,7 @@ using StringTools;
 class TitleState extends MusicBeatState
 {
 	public static var updateVersion:String;
-	public static var curVersion:String = '0.0.0';
+	public static var curVersion:String = '0.3.0';
 	public static var initialized:Bool = false;
 	
 	var blackScreen:FlxSprite;
