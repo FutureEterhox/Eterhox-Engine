@@ -5,7 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import haxe.Http; // Need to import the haxe.Http library
+import haxe.Http; 
 import TitleState;
 
 class OutdatedSubState extends MusicBeatState 
