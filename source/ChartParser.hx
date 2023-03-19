@@ -17,20 +17,16 @@ class ChartParser
 		var rows:Array<String> = lines.filter(function(line) return line != "");
 		csvData.replace("\n", ',');
 
-		var heightInTiles = rows.length;
-		var widthInTiles = 0;
-
-		var row:Int = 0;
-
-		// LMAOOOO STOLE ALL THIS FROM FLXBASETILEMAP LOLOL
+		var heightInTiles:Int = rows.length;
+		var widthInTiles:Int = 0;
 
 		var dopeArray:Array<Int> = [];
-		while (row < heightInTiles)
+		for (row in 0...heightInTiles)
 		{
-			var rowString = rows[row];
+			var rowString:String = rows[row];
 			if (rowString.endsWith(","))
 				rowString = rowString.substr(0, rowString.length - 1);
-			var columns = rowString.split(",");
+			var columns:Array<String> = rowString.split(",");
 
 			if (columns.length == 0)
 			{
@@ -42,38 +38,31 @@ class ChartParser
 				widthInTiles = columns.length;
 			}
 
-			var column = 0;
-			var pushedInColumn:Bool = false;
-			while (column < widthInTiles)
+			for (column in 0...widthInTiles)
 			{
-				// the current tile to be added:
-				var columnString = columns[column];
-				var curTile = Std.parseInt(columnString);
-
-				if (curTile == null)
-					throw 'String in row $row, column $column is not a valid integer: "$columnString"';
+				var columnString:String = columns[column];
+				var curTile:Int;
+				try {
+					curTile = Std.parseInt(columnString);
+				} catch (e:Dynamic) {
+					trace('Error parsing integer in row $row, column $column: "$columnString"');
+					curTile = 0;
+				}
 
 				if (curTile == 1)
 				{
-					if (column < 4)
-						dopeArray.push(column + 1);
-					else
-					{
-						var tempCol = (column + 1) * -1;
-						tempCol += 4;
-						dopeArray.push(tempCol);
-					}
-
-					pushedInColumn = true;
+					var tileVal:Int = (column < 4) ? column + 1 : (column + 1) * -1 + 4;
+					dopeArray.push(tileVal);
 				}
-
-				column++;
 			}
 
-			if (!pushedInColumn)
-				dopeArray.push(0);
-
-			row++;
+			if (columns.length < widthInTiles)
+			{
+				for (i in 0...(widthInTiles - columns.length))
+				{
+					dopeArray.push(0);
+				}
+			}
 		}
 		return dopeArray;
 	}

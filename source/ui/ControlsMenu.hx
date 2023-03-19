@@ -157,28 +157,23 @@ class ControlsMenu extends Page
 	}
 
 	function selectDevice(dev:Device)
-	{
-		currentDevice = dev;
-		for (item in controlGrid.members)
 		{
-			item.updateDevice(currentDevice);
-		}
-		var cancelBtn:String = dev == Device.Keys ? 'Escape' : 'Back';
-		if (dev == Device.Keys)
-		{
-			prompt.setText('\nPress any key to rebind\n\n\n\n    ' + cancelBtn + ' to cancel');
-		}
-		else
-		{
-			prompt.setText('\nPress any button\n   to rebind\n\n\n ' + cancelBtn + ' to cancel');
-		}
-		controlGrid.members[controlGrid.selectedIndex].select();
-		labels.members[Std.int(controlGrid.selectedIndex / 2)].alpha = 1;
-		controlGrid.enabled = true;
-		canExit = false;
-		deviceListSelected = false;
-		deviceList.enabled = false;
-	}
+			currentDevice = dev;
+			
+			for (item in controlGrid.members) item.updateDevice(currentDevice);
+			
+			var cancelBtn:String = dev == Device.Keys ? 'Escape' : 'Back';
+			var promptText:String = dev == Device.Keys ? '\nPress any key to rebind\n\n\n\n    ' : '\nPress any button\n   to rebind\n\n\n ';
+			prompt.setText(promptText + cancelBtn + ' to cancel');
+			
+			controlGrid.members[controlGrid.selectedIndex].select();
+			labels.members[Std.int(controlGrid.selectedIndex / 2)].alpha = 1;
+			
+			controlGrid.enabled = true;
+			canExit = false;
+			deviceListSelected = false;
+			deviceList.enabled = false;
+		}		
 
 	override function update(elapsed:Float)
 	{

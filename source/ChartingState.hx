@@ -290,16 +290,12 @@ class ChartingState extends MusicBeatState
 
 		var clearSectionButton:FlxButton = new FlxButton(10, 150, "Clear", clearSection);
 
-		var swapSection:FlxButton = new FlxButton(10, 170, "Swap section", function()
-		{
-			for (i in 0..._song.notes[curSection].sectionNotes.length)
-			{
-				var note = _song.notes[curSection].sectionNotes[i];
-				note[1] = (note[1] + 4) % 8;
-				_song.notes[curSection].sectionNotes[i] = note;
-				updateGrid();
+		var swapSection:FlxButton = new FlxButton(10, 170, "Swap section", function() {
+			for (i in 0..._song.notes[curSection].sectionNotes.length) {
+			  _song.notes[curSection].sectionNotes[i][1] = (_song.notes[curSection].sectionNotes[i][1] + 4) % 8;
+			  updateGrid();
 			}
-		});
+		  });		  
 
 		check_mustHitSection = new FlxUICheckBox(10, 30, null, null, "Must hit section", 100);
 		check_mustHitSection.name = 'check_mustHit';
@@ -499,39 +495,25 @@ class ChartingState extends MusicBeatState
 		FlxG.watch.addQuick('daBeat', curBeat);
 		FlxG.watch.addQuick('daStep', curStep);
 
-		if (FlxG.mouse.justPressed)
-		{
-			if (FlxG.mouse.overlaps(curRenderedNotes))
-			{
-				curRenderedNotes.forEach(function(note:Note)
-				{
-					if (FlxG.mouse.overlaps(note))
-					{
-						if (FlxG.keys.pressed.CONTROL)
-						{
-							selectNote(note);
-						}
-						else
-						{
-							trace('Attempting to delete note...');
-							deleteNote(note);
-						}
-					}
-				});
-			}
-			else
-			{
-				if (FlxG.mouse.x > gridBG.x
-					&& FlxG.mouse.x < gridBG.x + gridBG.width
-					&& FlxG.mouse.y > gridBG.y
-					&& FlxG.mouse.y < gridBG.y + (GRID_SIZE * _song.notes[curSection].lengthInSteps))
-				{
-					FlxG.log.add('Note added...');
-					addNote();
+		if (FlxG.mouse.justPressed) {
+			if (FlxG.mouse.overlaps(curRenderedNotes)) {
+			  for (note in curRenderedNotes) {
+				if (FlxG.mouse.overlaps(note)) {
+				  if (FlxG.keys.pressed.CONTROL) {
+					selectNote(note);
+				  } else {
+					trace('Attempting to delete note...');
+					deleteNote(note);
+				  }
 				}
+			  }
+			} else if (FlxG.mouse.x > gridBG.x && FlxG.mouse.x < gridBG.x + gridBG.width &&
+					   FlxG.mouse.y > gridBG.y && FlxG.mouse.y < gridBG.y + (GRID_SIZE * _song.notes[curSection].lengthInSteps)) {
+			  FlxG.log.add('Note added...');
+			  addNote();
 			}
-		}
-
+		  }
+		  
 		if (FlxG.mouse.x > gridBG.x
 			&& FlxG.mouse.x < gridBG.x + gridBG.width
 			&& FlxG.mouse.y > gridBG.y
@@ -851,9 +833,11 @@ class ChartingState extends MusicBeatState
 		{
 			// get last bpm
 			var daBPM:Float = _song.bpm;
-			for (i in 0...curSection)
-				if (_song.notes[i].changeBPM)
+			for (i in 0...curSection) {
+				if (_song.notes[i].changeBPM) {
 					daBPM = _song.notes[i].bpm;
+				}
+			}
 			Conductor.changeBPM(daBPM);
 		}
 
@@ -911,53 +895,31 @@ class ChartingState extends MusicBeatState
 	}
 
 	function selectNote(note:Note):Void
-	{
-		var swagNum:Int = 0;
-
-		for (i in _song.notes[curSection].sectionNotes)
 		{
-			if (i.strumTime == note.strumTime && i.noteData % 4 == note.noteData)
+			for (i in _song.notes[curSection].sectionNotes) if (i.strumTime == note.strumTime && i.noteData % 4 == note.noteData) curSelectedNote = _song.notes[curSection].sectionNotes[0];
+			updateGrid();
+			updateNoteUI();
+		}
+		
+		function deleteNote(note:Note):Void
+		{
+			for (i in _song.notes[curSection].sectionNotes) if (i[0] == note.strumTime && i[1] % 4 == note.noteData) _song.notes[curSection].sectionNotes.remove(i);
+			updateGrid();
+		}
+		
+		function clearSection():Void
+		{
+			_song.notes[curSection].sectionNotes = [];
+			updateGrid();
+		}
+		
+		function clearSong():Void
 			{
-				curSelectedNote = _song.notes[curSection].sectionNotes[swagNum];
+				for (daSection in 0..._song.notes.length)
+				{
+					_song.notes[daSection].sectionNotes = [];
+				}
 			}
-
-			swagNum += 1;
-		}
-
-		updateGrid();
-		updateNoteUI();
-	}
-
-	function deleteNote(note:Note):Void
-	{
-		for (i in _song.notes[curSection].sectionNotes)
-		{
-			if (i[0] == note.strumTime && i[1] % 4 == note.noteData)
-			{
-				FlxG.log.add('SUS NUMBER');
-				_song.notes[curSection].sectionNotes.remove(i);
-			}
-		}
-
-		updateGrid();
-	}
-
-	function clearSection():Void
-	{
-		_song.notes[curSection].sectionNotes = [];
-
-		updateGrid();
-	}
-
-	function clearSong():Void
-	{
-		for (daSection in 0..._song.notes.length)
-		{
-			_song.notes[daSection].sectionNotes = [];
-		}
-
-		updateGrid();
-	}
 
 	private function addNote():Void
 	{

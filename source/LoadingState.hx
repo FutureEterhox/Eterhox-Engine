@@ -113,65 +113,55 @@ class LoadingState extends MusicBeatState
 	}
 	
 	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
-		var wacky = FlxG.width * 0.88;
-		funkay.setGraphicSize(Std.int(wacky + 0.9 * (funkay.width - wacky)));
-		funkay.updateHitbox();
-		if (controls.ACCEPT)
 		{
-			funkay.setGraphicSize(Std.int(funkay.width + 60));
-			funkay.updateHitbox();
-			#if debug
-			if (callbacks != null) trace('fired: ' + callbacks.getFired() + " unfired:" + callbacks.getUnfired());
+			super.update(elapsed);
+			var wacky = FlxG.width * 0.88;
+			var graphicSize = Std.int(wacky + 0.9 * (funkay.width - wacky));
+			funkay.setGraphicSize(graphicSize);
+			if (funkay != null) {
+				funkay.updateHitbox();
+			}
+			if (controls.ACCEPT)
+			{
+				funkay.setGraphicSize(Std.int(funkay.width + 60));
+				if (funkay != null) {
+					funkay.updateHitbox();
+				}
+				#if debug
+				if (callbacks != null) trace('fired: ' + callbacks.getFired() + " unfired:" + callbacks.getUnfired());
+				#end
+			}
+			if (callbacks != null)
+			{
+				targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
+				loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
+			}
+		}		
+		
+		function onLoad()
+		{
+			if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
+			FlxG.switchState(target);
+		}
+		
+		static function getSongPath() return Paths.inst(PlayState.SONG.song);
+		static function getVocalPath() return Paths.voices(PlayState.SONG.song);
+		
+		inline static public function loadAndSwitchState(target:FlxState, stopMusic = false)
+		{
+			FlxG.switchState(getNextState(target, stopMusic));
+		}
+		
+		static function getNextState(target:FlxState, stopMusic = false):FlxState
+		{
+			Paths.setCurrentLevel("week" + PlayState.storyWeek);
+			#if NO_PRELOAD_ALL
+			var loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared");
+			if (!loaded) return new LoadingState(target, stopMusic);
 			#end
-		}
-		if (callbacks != null)
-		{
-			targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
-			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
-		}
-	}
-	
-	function onLoad()
-	{
-		if (stopMusic && FlxG.sound.music != null)
-			FlxG.sound.music.stop();
-		
-		FlxG.switchState(target);
-	}
-	
-	static function getSongPath()
-	{
-		return Paths.inst(PlayState.SONG.song);
-	}
-	
-	static function getVocalPath()
-	{
-		return Paths.voices(PlayState.SONG.song);
-	}
-	
-	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false)
-	{
-		FlxG.switchState(getNextState(target, stopMusic));
-	}
-	
-	static function getNextState(target:FlxState, stopMusic = false):FlxState
-	{
-		Paths.setCurrentLevel("week" + PlayState.storyWeek);
-		#if NO_PRELOAD_ALL
-		var loaded = isSoundLoaded(getSongPath())
-			&& (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath()))
-			&& isLibraryLoaded("shared");
-		
-		if (!loaded)
-			return new LoadingState(target, stopMusic);
-		#end
-		if (stopMusic && FlxG.sound.music != null)
-			FlxG.sound.music.stop();
-		
-		return target;
-	}
+			if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
+			return target;
+		}		
 	
 	#if NO_PRELOAD_ALL
 	static function isSoundLoaded(path:String):Bool

@@ -65,95 +65,59 @@ class PlayerSettings
 		}
 	}
 
-	function addGamepad(pad:FlxGamepad)
-	{
-		var setDefault:Bool = true;
-		var saveControls = FlxG.save.data.controls;
-		if (saveControls != null)
-		{
-			var buttons = null;
-			if (id == 0 && saveControls.p1 != null && saveControls.p1.pad != null)
-			{
-				buttons = saveControls.p1.pad;
-			}
-			else if (id == 1 && saveControls.p2 != null && saveControls.p2.pad != null)
-			{
-				buttons = saveControls.p2.pad;
-			}
-			if (buttons != null)
-			{
-				setDefault = false;
-				trace('loaded pad data: ' + Json.stringify(buttons));
-				controls.addGamepadWithSaveData(pad.id, buttons);
-			}
-		}
-		if (setDefault)
-		{
-			controls.addDefaultGamepad(pad.id);
-		}
-	}
+	public function addGamepad(pad:FlxGamepad):Void {
+        var setDefault:Bool = true;
+        var saveControls = FlxG.save.data.controls;
+        if (saveControls != null) {
+            var buttons = null;
+            if (id == 0 && saveControls.p1 != null && saveControls.p1.pad != null) {
+                buttons = saveControls.p1.pad;
+            } else if (id == 1 && saveControls.p2 != null && saveControls.p2.pad != null) {
+                buttons = saveControls.p2.pad;
+            }
+            if (buttons != null) {
+                setDefault = false;
+                trace('loaded pad data: ${Json.stringify(buttons)}');
+                controls.addGamepadWithSaveData(pad.id, buttons);
+            }
+        }
+        if (setDefault) {
+            controls.addDefaultGamepad(pad.id);
+        }
+    }
 
-	public function saveControls()
-	{
-		if (FlxG.save.data.controls == null)
-		{
-			FlxG.save.data.controls = {};
-		}
-		var keydata = null;
-		if (id == 0)
-		{
-			if (FlxG.save.data.controls.p1 == null)
-			{
-				FlxG.save.data.controls.p1 = {};
-			}
-			keydata = FlxG.save.data.controls.p1;
-		}
-		else
-		{
-			if (FlxG.save.data.controls.p2 == null)
-			{
-				FlxG.save.data.controls.p2 = {};
-			}
-			keydata = FlxG.save.data.controls.p2;
-		}
-		var savedata = this.controls.createSaveData(Device.Keys);
-		if (savedata != null)
-		{
-			keydata.keys = savedata;
-			trace('saving key data: ' + Json.stringify(savedata));
-		}
-		if (controls.gamepadsAdded.length > 0)
-		{
-			savedata = this.controls.createSaveData(Device.Gamepad(controls.gamepadsAdded[0]));
-			if (savedata != null)
-			{
-				trace('saving pad data: ' + Json.stringify(savedata));
-				keydata.pad = savedata;
-			}
-		}
-		FlxG.save.flush();
-	}
+    public function saveControls():Void {
+        if (FlxG.save.data.controls == null) {
+            FlxG.save.data.controls = {};
+        }
+        var keydata = (id == 0) ? FlxG.save.data.controls.p1 = {} : FlxG.save.data.controls.p2 = {};
+        var savedata = controls.createSaveData(Device.Keys);
+        if (savedata != null) {
+            keydata.keys = savedata;
+            trace('saving key data: ${Json.stringify(savedata)}');
+        }
+        if (controls.gamepadsAdded.length > 0) {
+            savedata = controls.createSaveData(Device.Gamepad(controls.gamepadsAdded[0]));
+            if (savedata != null) {
+                trace('saving pad data: ${Json.stringify(savedata)}');
+                keydata.pad = savedata;
+            }
+        }
+        FlxG.save.flush();
+    }
 
-	static public function init():Void
-	{
-		if (player1 == null)
-		{
-			player1 = new PlayerSettings(0);
-			numPlayers++;
-		}
+    static public function init():Void {
+        if (player1 == null) {
+            player1 = new PlayerSettings(0);
+            numPlayers++;
+        }
+        FlxG.gamepads.deviceConnected.add(onGamepadAdded);
+        for (pad in FlxG.gamepads.getActiveGamepads()) {
+            onGamepadAdded(pad);
+        }
+    }
 
-		FlxG.gamepads.deviceConnected.add(onGamepadAdded);
-		for (pad in FlxG.gamepads.getActiveGamepads())
-		{
-			if (pad != null)
-			{
-				onGamepadAdded(pad);
-			}
-		}
-	}
-
-	static public function onGamepadAdded(pad):Void
-	{
-		player1.addGamepad(pad);
-	}
+    static public function onGamepadAdded(pad:FlxGamepad):Void {
+        player1.addGamepad(pad);
+    }
 }
