@@ -2,6 +2,7 @@ package;
 
 import Sys.sleep;
 import discord_rpc.DiscordRpc;
+import TitleState;
 
 using StringTools;
 
@@ -38,7 +39,7 @@ class DiscordClient
 			details: "Main Menus",
 			state: null,
 			largeImageKey: 'icon',
-			largeImageText: "Eterhox Engine"
+			largeImageText: "Eterhox Engine v" +TitleState.curVersion,
 		});
 	}
 
@@ -74,7 +75,7 @@ class DiscordClient
 			details: details,
 			state: state,
 			largeImageKey: 'icon',
-			largeImageText: "Eterhox Engine",
+			largeImageText: "Eterhox Engine v" +TitleState.curVersion,
 			smallImageKey : smallImageKey,
 			// Obtained times are in milliseconds so they are divided so Discord can use it
 			startTimestamp : Std.int(startTimestamp / 1000),

@@ -83,7 +83,7 @@ class LatencyState extends FlxState
         }
 
         offsetText.text = "Offset: " + Conductor.offset + "ms";
-		offsetText2.text = "-------Warning This state is undergoing development. It's best if you don't use this state.";
+		offsetText2.text = "Warning! This state is unstable and may not work as intended. To exit, press 1.";
 
         Conductor.songPosition = FlxG.sound.music.time - Conductor.offset;
 
