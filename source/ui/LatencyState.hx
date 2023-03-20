@@ -16,10 +16,6 @@ class LatencyState extends FlxState
 	var noteGrp:FlxTypedGroup<Note>;
     var strumLine:FlxSprite;
 
-    #if desktop
-    var discordClient:DiscordClient;
-    #end
-
     override function create()
     {
         offsetText = new FlxText(FlxG.width/4, 0, FlxG.width);
@@ -42,10 +38,10 @@ class LatencyState extends FlxState
         strumLine = new FlxSprite(FlxG.width / 2, 100).makeGraphic(FlxG.width, 5);
         add(strumLine);
 
-        #if desktop
-        discordClient = new DiscordClient();
-        discordClient.changePresence("Audio Offset", null);
-        #end
+		#if desktop
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("Audio Offset", null);
+		#end
         /**
 			Lines 54-55 may not work as intended. Same goes for the Strumline.
 		**/

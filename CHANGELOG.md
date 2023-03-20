@@ -4,13 +4,14 @@ Eterhox Engine changelogs and stuff.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# 0.4.0 Update
+# 0.4.3 Update
 ### What's New?
 - Audio Offset (didn't make it but just enabled the code -- It's broken)
 - Input System improvements (Sustain notes may look odd -- Looking into it.)
 - Cleanup on PlayState and other files
 - last option in PauseSubState now says "Exit Song" 
 - Moved LatencyState (Audio Offset) to the UI folder instead 
+- Fixed Discord RPC bug (wouldn't let you build the engine -- only test the engine.)
 
 ### What's Removed?
 - Nothing... (probably)
