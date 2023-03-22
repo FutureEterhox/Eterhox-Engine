@@ -1,0 +1,61 @@
+# Build Friday Night Funkin': Eterhox Engine
+
+## Notice
+
+Warning! This is a document on how to build Eterhox Engine. If you want to play the engine instead, please see the Actions tab and find an avaliable--working build.
+You may also play the engine (in web) by going through the Github Pages instead.
+
+In addition to this, these are instructions for Windows only. Please seek another Build instructions page like Kade Engine as your guide.
+
+# Required dependencies 
+1. Install [Haxe 4.2.5](https://haxe.org/download/version/4.2.5/)
+2. Install [HaxeFlixel](https://haxeflixel.com/documentation/install-haxeflixel/). Make sure to follow the instructions in that page. Once finished, return back here.
+3. After installing HaxeFlixel, install Git.
+    - Install through [git-scm](https://git-scm.com/downloads)
+
+## Terminal Time
+
+haxelib --global update haxelib // Optional (that's if you're using an older version of Haxelib)
+
+- `haxelib install lime`
+- `haxelib install openfl`
+- `haxelib install flixel`
+- `haxelib run lime setup flixel`
+- `haxelib run lime setup`
+- `haxelib install flixel-tools`
+- `haxelib run flixel-tools setup`
+- `haxelib update flixel`
+- `haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons.git`
+- `haxelib install hscript`
+- `haxelib git polymod https://github.com/larsiusprime/polymod.git`
+- `haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc`
+
+## IDE
+Notice: This is only if you're going to build for Windows. You don't have to install this if your main build target is HTML5.
+
+1. Make sure to download and install [Visual Studio Community -- This will automatically download when clicked](https://download.visualstudio.microsoft.com/download/pr/3105fcfe-e771-41d6-9a1c-fc971e7d03a7/8eb13958dc429a6e6f7e0d6704d43a55f18d02a253608351b6bf6723ffdaf24e/vs_Community.exe)
+
+2. Be sure to install these 2 components
+ - `MSVC v142 - VS 2019 C++ x64/x86 build tools - (Latest)`
+ - `Windows 10 SDK - (Latest)`
+
+3. (Optional) -- If you would like to install Visual Studio Code (as your main IDE), you may. Please make sure however you install the IDE section instructions.
+
+## Make that Git feature useful
+Now that you've installed everything, including Git, you can clone this repository.
+
+If you have a terminal open, 
+- Type `cd` then the path to where you will like to clone the rep. (ex: cd "C:\Users\(your username here)\Eterhox Engine"). Press Enter and continue with Step 2
+- Type `git clone https://github.com/bloxee/Eterhox-Engine.git`
+- After cloning the git, type `cd Eterhox-Engine`.
+
+Congrats, you've cloned the latest version of Eterhox Engine.
+
+## Building
+You can build to whatever targets that Haxe supports (such as: windows, mac, linux, android, html5 by using the following command 
+- `lime build (insert target)`
+
+- When the build is complete, you'll not see it immediately. You'll have to go through the export folder that it made in the Source Folder.
+- This: `Eterhox-Engine/export/release/(target)/bin`
+
+Note: Other folders that are in the target folder isn't necessary. Only the bin folder is needed (as it contains the game itself.)
