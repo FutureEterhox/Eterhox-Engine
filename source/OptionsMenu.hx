@@ -60,28 +60,17 @@ class OptionsMenu extends MusicBeatState
         }
     }
 
-    function changeSelection(change:Int = 0)
-    {
+    function changeSelection(change:Int = 0) {
         FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-
         curSelected += change;
-
-        if (curSelected < 0)
-            curSelected = grpControls.length - 1;
-        if (curSelected >= grpControls.length)
-            curSelected = 0;
-
+        if (curSelected < 0) curSelected = grpControls.length - 1;
+        if (curSelected >= grpControls.length) curSelected = 0;
         var bullShit:Int = 0;
-
-        for (item in grpControls.members)
-        {
+        for (item in grpControls.members) {
             item.targetY = bullShit - curSelected;
             bullShit++;
-
             item.alpha = 0.6;
-
-            if (item.targetY == 0)
-            {
+            if (item.targetY == 0) {
                 item.alpha = 1;
             }
         }

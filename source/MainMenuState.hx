@@ -29,114 +29,116 @@ import flixel.ui.FlxButton;
 using StringTools;
 
 class MainMenuState extends MusicBeatState {
-	var menuItems:MainMenuList;
-	#if !switch
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
-	#else
-	var optionShit:Array<String> = ['story mode', 'freeplay'];
-	#end
-	var magenta:FlxSprite;
-	var camFollow:FlxObject;
-	override function create() {
-		#if desktop
-		DiscordClient.changePresence("Main Menus", null);
-		#end
-		transIn = FlxTransitionableState.defaultTransIn;
-		transOut = FlxTransitionableState.defaultTransOut;
-		if (!FlxG.sound.music.playing) {
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-		}
-		persistentUpdate = persistentDraw = true;
-		var bg:FlxSprite = new FlxSprite(null, null, Paths.image('menuBG'));
-		bg.scrollFactor.x = 0;
-		bg.scrollFactor.y = 0.17;
-		bg.setGraphicSize(Std.int(bg.width * 1.2));
-		bg.updateHitbox();
-		bg.screenCenter();
-		bg.antialiasing = true;
-		add(bg);
-		camFollow = new FlxObject(0, 0, 1, 1);
-		add(camFollow);
-		magenta = new FlxSprite(null, null, Paths.image('menuDesat'));
-		magenta.scrollFactor.x = bg.scrollFactor.x;
-		magenta.scrollFactor.y = bg.scrollFactor.y;
-		magenta.setGraphicSize(Std.int(bg.width));
-		magenta.updateHitbox();
-		magenta.x = bg.x;
-		magenta.y = bg.y;
-		magenta.visible = false;
-		magenta.antialiasing = true;
-		magenta.color = 0xFFFD719B;
-		if (PreferencesMenu.preferences.get('flashing-menu')) {
-			add(magenta);
-		}
-		menuItems = new MainMenuList();
-		add(menuItems);
-		menuItems.onChange.add(onMenuItemChange);
-		menuItems.onAcceptPress.add(function(item:MenuItem) {
-			FlxFlicker.flicker(magenta, 1.1, 0.15, false, true);
-		});
-		menuItems.enabled = false;
-		menuItems.createItem(null, null, "story mode", function() {
-			startExitState(new StoryMenuState());
-		});
-		menuItems.createItem(null, null, "freeplay", function() {
-			startExitState(new FreeplayState());
-		});
-		if (VideoState.seenVideo) {
-			menuItems.createItem(null, null, "kickstarter", selectDonate, true);
-		} else {
-			menuItems.createItem(null, null, "donate", selectDonate, true);
-		}
-		menuItems.createItem(0, 0, "options", function() {
-			startExitState(new OptionsState());
-		});
-		var pos:Float = (FlxG.height - 160 * (menuItems.length - 1)) / 2;
-		for (i in 0...menuItems.length) {
-			var item:MainMenuItem = menuItems.members[i];
-			item.x = FlxG.width / 2;
-			item.y = pos + (160 * i);
-		}
+    var menuItems:MainMenuList;
+    var optionShit = ['story mode', 'freeplay', 'donate', 'options'];
+    var magenta:FlxSprite;
+    var camFollow:FlxObject;
+    var bg:FlxSprite;
+    var versionShit1:FlxText;
+    var nextState:FlxState;
 
-		FlxG.camera.follow(camFollow, null, 0.06);
+    override function create() {
+        #if desktop
+        DiscordClient.changePresence("Main Menus", null);
+        #end
+        transIn = FlxTransitionableState.defaultTransIn;
+        transOut = FlxTransitionableState.defaultTransOut;
 
-		var versionShit1:FlxText = new FlxText(12, FlxG.height - 44, 0, "Eterhox Engine v" + TitleState.curVersion, 12);
-		versionShit1.scrollFactor.set();
-		versionShit1.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(versionShit1);
-		
-		var versionShit2:FlxText = new FlxText(12, FlxG.height - 24, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 12);
-		versionShit2.scrollFactor.set();
-		versionShit2.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(versionShit2);		
+        super.create();
+        if (!FlxG.sound.music.playing) {
+            FlxG.sound.playMusic(Paths.music('freakyMenu'));
+        }
+        persistentUpdate = persistentDraw = true;
 
-		super.create();
-	}
+        bg = new FlxSprite(null, null, Paths.image('menuBG'));
+        bg.scrollFactor.x = 0;
+        bg.scrollFactor.y = 0.17;
+        bg.setGraphicSize(Std.int(bg.width * 1.2));
+        bg.updateHitbox();
+        bg.screenCenter();
+        bg.antialiasing = true;
+        add(bg);
+        camFollow = new FlxObject(0, 0, 1, 1);
+        add(camFollow);
+        magenta = new FlxSprite(null, null, Paths.image('menuDesat'));
+        magenta.scrollFactor.x = bg.scrollFactor.x;
+        magenta.scrollFactor.y = bg.scrollFactor.y;
+        magenta.setGraphicSize(Std.int(bg.width));
+        magenta.updateHitbox();
+        magenta.x = bg.x;
+        magenta.y = bg.y;
+        magenta.visible = false;
+        magenta.antialiasing = true;
+        magenta.color = 0xFFFD719B;
+        if (PreferencesMenu.preferences.get('flashing-menu')) {
+            add(magenta);
+        }
+        
+        menuItems = new MainMenuList();
+        add(menuItems);
+        menuItems.onChange.add(onMenuItemChange);
+        menuItems.onAcceptPress.add(function(item:MenuItem) {
+            FlxFlicker.flicker(magenta, 1.1, 0.15, false, true);
+        });
+        menuItems.enabled = false;
 
-	override function finishTransIn()
-	{
-		super.finishTransIn();
-		menuItems.enabled = true;
-	}
+        menuItems.createItem(null, null, "story mode", function() {
+            startExitState(new StoryMenuState());
+        });
+        menuItems.createItem(null, null, "freeplay", function() {
+            startExitState(new FreeplayState());
+        });
+        if (VideoState.seenVideo) {
+            menuItems.createItem(null, null, "kickstarter", selectDonate, true);
+        } else {
+            menuItems.createItem(null, null, "donate", selectDonate, true);
+        }
+        menuItems.createItem(0, 0, "options", function() {
+            startExitState(new OptionsState());
+        });
+        
+        var pos:Float = (FlxG.height - 160 * (menuItems.length - 1)) / 2;
+        for (i in 0...menuItems.length) {
+            var item:MainMenuItem = menuItems.members[i];
+            item.x = FlxG.width / 2;
+            item.y = pos + (160 * i);
+        }
 
-	function onMenuItemChange(item:MenuItem)
-	{
-		camFollow.setPosition(item.getGraphicMidpoint().x, item.getGraphicMidpoint().y);
-	}
-	
-	function selectDonate()
-	{
-		#if linux
-		Sys.command('/usr/bin/xdg-open', ["https://www.kickstarter.com/projects/funkin/friday-night-funkin-the-full-ass-game/", "&"]);
-		#else
-		FlxG.openURL('https://www.kickstarter.com/projects/funkin/friday-night-funkin-the-full-ass-game/');
-		#end
-	}
+        FlxG.camera.follow(camFollow, null, 0.06);
+        
+        versionShit1 = new FlxText(9, FlxG.height - 25, 0, "Eterhox Engine v" + TitleState.curVersion, 12);
+        versionShit1.scrollFactor.set();
+        versionShit1.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        add(versionShit1);
 
-	function startExitState(nextState:FlxState)
-	{
-		menuItems.enabled = false;
-		menuItems.forEach(function(item:MainMenuItem)
+        super.create();
+    }
+
+    override function finishTransIn()
+    {
+        super.finishTransIn();
+        menuItems.enabled = true;
+    }
+
+    function onMenuItemChange(item:MenuItem)
+    {
+        camFollow.setPosition(item.getGraphicMidpoint().x, item.getGraphicMidpoint().y);
+    }
+    
+    function selectDonate()
+    {
+        #if linux
+        Sys.command('/usr/bin/xdg-open', ["https://www.kickstarter.com/projects/funkin/friday-night-funkin-the-full-ass-game/", "&"]);
+        #else
+        FlxG.openURL('https://www.kickstarter.com/projects/funkin/friday-night-funkin-the-full-ass-game/');
+        #end
+    }
+
+    function startExitState(nextState:FlxState)
+    {
+        this.nextState = nextState;
+        menuItems.enabled = false;
+        menuItems.forEach(function(item:MainMenuItem)
 		{
 			if (menuItems.selectedIndex != item.ID)
 				FlxTween.tween(item, { alpha: 0 }, 0.4, { ease: FlxEase.quadOut });

@@ -39,13 +39,13 @@ using StringTools;
 class TitleState extends MusicBeatState
 {
 	public static var updateVersion:String;
-	public static var curVersion:String = '0.4.3';
+	public static var curVersion:String = '0.4.4';
 	public static var initialized:Bool = false;
 	
 	var blackScreen:FlxSprite;
-	var credGroup:FlxGroup;
+	var credGroup:FlxGroup = new FlxGroup();
 	var credTextShit:Alphabet;
-	var textGroup:FlxGroup;
+	var textGroup:FlxGroup = new FlxGroup();
 	var ngSpr:FlxSprite;
 
 	var curWacky:Array<String> = [];
@@ -56,12 +56,6 @@ class TitleState extends MusicBeatState
 
 	var swagShader:ColorSwap;
 	var alphaShader:BuildingShaders;
-
-	#if web
-	var video:Video;
-	var netStream:NetStream;
-	var overlay:Sprite;
-	#end
 
 	override public function create():Void
 	{
@@ -74,10 +68,6 @@ class TitleState extends MusicBeatState
 		///   ///   ////
 		///   ///   //////////
 		// ------------------------------------------------------------------------------------///
-
-		#if polymod
-		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod'], framework: OPENFL});
-		#end
 
 		FlxG.game.focusLostFramerate = 60;
 
@@ -132,36 +122,6 @@ class TitleState extends MusicBeatState
 		 });
 		#end
 	}
-
-	#if web
-	function client_onMetaData(e)
-	{
-		video.attachNetStream(netStream);
-		video.width = video.videoWidth;
-		video.height = video.videoHeight;
-	}
-
-	function netStream_onAsyncError(e)
-	{
-		trace("Error loading video");
-	}
-
-	function netConnection_onNetStatus(e)
-	{
-		if (e.info.code == 'NetStream.Play.Complete')
-		{
-			startIntro();
-		}
-		trace(e.toString());
-	}
-
-	function overlay_onMouseDown(e)
-	{
-		netStream.soundTransform.volume = 0.2;
-		netStream.soundTransform.pan = -1;
-		Lib.current.stage.removeChild(overlay);
-	}
-	#end
 
 	var logoBl:FlxSprite;
 	var gfDance:FlxSprite;
@@ -262,14 +222,6 @@ class TitleState extends MusicBeatState
 			initialized = true;
 
 		// credGroup.add(credTextShit);
-
-		if (FlxG.sound.music != null)
-		{
-			FlxG.sound.music.onComplete = function()
-			{
-				FlxG.switchState(new VideoState());
-			}
-		}
 	}
 
 	function getIntroTextShit():Array<Array<String>>
@@ -342,43 +294,46 @@ class TitleState extends MusicBeatState
 			transitioning = true;
 			// FlxG.sound.music.stop();
 
-			// time to check if Eterhox Engine is outdated
-			trace("Checking Eterhox Engine's Github page");
+		// time to check if Eterhox Engine is outdated
+		trace("Checking Eterhox Engine's Github page");
 
-			var http = new haxe.Http("https://raw.githubusercontent.com/Bloxee/Eterhox-Engine/main/verBuild");
+		var http = new haxe.Http("https://raw.githubusercontent.com/Bloxee/Eterhox-Engine/main/verBuild");
 
-			http.onData = function(data:String) {
-				TitleState.updateVersion = data.split('\n')[0].trim();
-				
-				trace('Version on Github: ' + updateVersion + ', Current Engine version: ' + curVersion);
-				if (updateVersion != curVersion) {
-					if (updateVersion < curVersion) {
-						trace("Hol' up, no update?? That's fucking shit.");
-					} else {
-						// Send the bozo to OutdatedSubState so they can cry about them having an older version of the engine
-						FlxG.switchState(new OutdatedSubState());
-						trace("Ahahaha stupid idiot is using an old engine, couldn't be me.");
-						#if desktop
-						var rpcDetails = "Player is using outdated engine";
-						DiscordClient.changePresence("This bitch lives on a rock lmfao", rpcDetails);
-						#end
-					}
-				} else {
-					trace('Hold on...wait a minute, some shit just happened here.');
-				}
+		http.onData = function(data:String) {
+			var latestVersion = data.split('\n')[0].trim();
+			var currentVersion = TitleState.curVersion;
 			
-			// Prevent game lock?
+			trace('Latest version on Github: ' + latestVersion + ', current version: ' + currentVersion);
+			
+			if (latestVersion != currentVersion) {
+				if (latestVersion < currentVersion) {
+					trace("Hol' up, no update?? That's fucking shit.");
+				} else {
+					// Send the bozo to OutdatedState so they can cry about having an old engine
+					FlxG.switchState(new OutdatedSubState());
+					trace("Ahahaha stupid idiot is using an old engine, couldn't be me.");
+					
+					#if desktop
+					var rpcDetails = "Player is using an outdated version of Eterhox Engine";
+					DiscordClient.changePresence("This bitch lives on a rock lmfao", rpcDetails);
+					#end
+				}
+			} else {
+				trace("Wait no update?? That's crazy.");
+			}
+			
+			// Switch to MainMenuState to prevent game lock
 			FlxG.switchState(new MainMenuState());
 		};
 
 		http.onError = function(error) {
-			trace('Unable to detect an update - Error Message: $error');
+			trace('Unable to check for update - Error Message: $error');
 			FlxG.switchState(new MainMenuState());
 		};
 
-		http.request();
+		http.request();		
 		}
-		
+
 		if (pressedEnter && !skippedIntro && initialized)
 		{
 			skipIntro();
@@ -395,119 +350,115 @@ class TitleState extends MusicBeatState
 
 		super.update(elapsed);
 	}
-
+	
 	function createCoolText(textArray:Array<String>)
-		{
-		  for (i in 0...textArray.length)
-		  {
-			var money:Alphabet = new Alphabet(0, 0, textArray[i], true, false);
-			money.screenCenter(X);
-			money.y += (i * 60) + 200;
-			credGroup.add(money);
-			textGroup.add(money);
-		  }
-		}
-
+	{
+	  for (i in 0...textArray.length)
+	  {
+		var money:Alphabet = new Alphabet(0, 0, textArray[i], true, false);
+		money.screenCenter(X);
+		money.y += (i * 60) + 200;
+		credGroup.add(money);
+		textGroup.add(money);
+	  }
+	}
+	
 	function addMoreText(text:String)
 	{
-		var coolText:Alphabet = new Alphabet(0, 0, text, true, false);
-		coolText.screenCenter(X);
-		coolText.y += (textGroup.length * 60) + 200;
-		credGroup.add(coolText);
-		textGroup.add(coolText);
+	  var coolText:Alphabet = new Alphabet(0, 0, text, true, false);
+	  coolText.screenCenter(X);
+	  coolText.y += (textGroup.length * 60) + 200;
+	  credGroup.add(coolText);
+	  textGroup.add(coolText);
 	}
-
+	
 	function deleteCoolText()
 	{
-		while (textGroup.members.length > 0)
-		{
-			credGroup.remove(textGroup.members[0], true);
-			textGroup.remove(textGroup.members[0], true);
-		}
+	  while (textGroup.members.length > 0)
+	  {
+		credGroup.remove(textGroup.members[0], true);
+		textGroup.remove(textGroup.members[0], true);
+	  }
 	}
-
+	
 	override function beatHit()
 	{
-		super.beatHit();
-		
-		if (logoBl != null) {
-		  logoBl.animation.play('bump');
-		}
-		// So these lines below this comment are to prevent the game from crashing. I'll figure out this shit works later in life. 
-		danceLeft = !danceLeft;
-		if (danceLeft && gfDance != null) { 
-		  gfDance.animation.play('danceRight');
-		} else if (gfDance != null) { 
-		  gfDance.animation.play('danceLeft');
-		}
-
-		FlxG.log.add(curBeat);
-
-		if (curBeat > lastBeat)
+	  super.beatHit();
+	
+	  if (logoBl != null) {
+		logoBl.animation.play('bump');
+	  }
+	  // So these lines below this comment are to prevent the game from crashing. I'll figure out this shit works later in life. 
+	  danceLeft = !danceLeft;
+	  if (danceLeft && gfDance != null) { 
+		gfDance.animation.play('danceRight');
+	  } else if (gfDance != null) { 
+		gfDance.animation.play('danceLeft');
+	  }
+	
+	  FlxG.log.add(curBeat);
+	
+	  if (curBeat > lastBeat)
+	  {
+		for (i in lastBeat...curBeat)
 		{
-			for (i in lastBeat...curBeat)
-			{
-				switch (i + 1)
-				{
-					case 1:
-						createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
-					case 3:
-						addMoreText('present');
-					case 4:
-						deleteCoolText();
-					case 5:
-						createCoolText(['Eterhox Engine ', 'by']);
-					case 7:
-						addMoreText('Bloxe');
-						ngSpr.visible = true;
-					case 8:
-						deleteCoolText();
-						ngSpr.visible = false;
-					case 9:
-						createCoolText([curWacky[0]]);
-					case 11:
-						addMoreText(curWacky[1]);
-					case 12:
-						deleteCoolText();
-					case 13:
-						addMoreText('Friday');
-					case 14:
-						addMoreText('Night');
-					case 15:
-						addMoreText('Funkin');		
-					case 16:
-						skipIntro();
-				}
-			}
+		  switch (i + 1)
+		  {
+			case 1:
+			  createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
+			case 3:
+			  addMoreText('present');
+			case 4:
+			  deleteCoolText();
+			case 5:
+			  createCoolText(['Eterhox Engine ', 'by']);
+			case 7:
+			  addMoreText('Eterhox');
+			case 8:
+			  deleteCoolText();
+			case 9:
+			  createCoolText([curWacky[0]]);
+			case 11:
+			  addMoreText(curWacky[1]);
+			case 12:
+			  deleteCoolText();
+			case 13:
+			  addMoreText('Friday');
+			case 14:
+			  addMoreText('Night');
+			case 15:
+			  addMoreText('Funkin');   
+			case 16:
+			  skipIntro();
+		  }
 		}
-		
-		lastBeat = curBeat;
+	  }
+	
+	  lastBeat = curBeat;
 	}
 
 	var skippedIntro:Bool = false;
 
-	function skipIntro():Void
-		{
-			if (!skippedIntro)
-			{	
-				remove(ngSpr);
+	function skipIntro():Void {
+		if (!skippedIntro) {
+			remove(ngSpr);
 	
-				FlxG.camera.flash(FlxColor.WHITE, 4);
-				remove(credGroup);
+			FlxG.camera.flash(FlxColor.WHITE, 4);
+			remove(credGroup);
 	
-				FlxTween.tween(logoBl, {y: -100}, 1.4, {ease: FlxEase.expoInOut});
+			FlxTween.tween(logoBl, {y: -100}, 1.4, {ease: FlxEase.expoInOut});
 	
-				logoBl.angle = -4;
+			logoBl.angle = -4;
 	
-				var timer:FlxTimer = new FlxTimer();
-
-				timer.start(0.01, function(tmr:FlxTimer)
-				{
-					if (logoBl.angle == -4)
-						FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
-					else if (logoBl.angle == 4)
-						FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
-				}, 0);
+			var timer:FlxTimer = new FlxTimer();
+	
+			timer.start(0.01, function(tmr:FlxTimer) {
+				if (logoBl.angle == -4) {
+					FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
+				} else if (logoBl.angle == 4) {
+					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
+				}
+			}, 0);
 				
 				// Kade Engine code ~ Truly inspiring words from Kade
 				// ---------------------------------------------------------
@@ -516,6 +467,16 @@ class TitleState extends MusicBeatState
 				FlxG.sound.music.time = 9400; // 9.4 seconds
 	
 				skippedIntro = true;
+
+				if (FlxG.sound.music != null)
+					{
+						FlxG.sound.music.onComplete = function()
+						{
+							// Back to zero
+							FlxG.sound.music.time = 0;
+							FlxG.sound.music.fadeIn(4, 0, 0.7);
+						}
+					}
 			}
 		}
 	}

@@ -1,7 +1,6 @@
-- Cleanup
-- Bug fixes
-- Input System improvements
-- Audio offset
-- Engine optimizations
+- FPS Enabled (but no more disabling until later)
+- Input fixes
+- Optimizations
+- Audio offset fixes
 
-New Engine version: 0.4.3
+- New engine version: 0.4.4

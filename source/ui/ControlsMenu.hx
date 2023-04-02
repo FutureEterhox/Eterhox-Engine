@@ -27,105 +27,86 @@ class ControlsMenu extends Page
 	var prompt:Prompt;
 
 	override public function new()
-	{
-		var array:Array<Array<InputItem>> = [];
-		for (i in 0...controlGroups.length)
 		{
-			array.push([]);
-		}
-		itemGroups = array;
-		super();
-		menuCamera = new FlxCamera();
-		FlxG.cameras.add(menuCamera, false);
-		menuCamera.bgColor = FlxColor.TRANSPARENT;
-		camera = menuCamera;
-		labels = new FlxTypedGroup<AtlasText>();
-		var grpText:FlxTypedGroup<AtlasText> = new FlxTypedGroup<AtlasText>();
-		controlGrid = new MenuTypedList(Columns(2), Vertical);
-		add(labels);
-		add(grpText);
-		add(controlGrid);
-		if (FlxG.gamepads.numActiveGamepads > 0)
-		{
-			var spr:FlxSprite = new FlxSprite();
-			spr.makeGraphic(FlxG.width, 100, 0xFFFAFD6D);
-			add(spr);
-			deviceList = new TextMenuList(Horizontal, None);
-			add(deviceList);
-			deviceListSelected = true;
-			var kbItem:TextMenuItem = deviceList.createItem(null, null, 'Keyboard', Bold, function()
+			var array:Array<Array<InputItem>> = [];
+			for (i in 0...controlGroups.length) array.push([]);
+			itemGroups = array;
+			super();
+			menuCamera = new FlxCamera();
+			FlxG.cameras.add(menuCamera, false);
+			menuCamera.bgColor = FlxColor.TRANSPARENT;
+			camera = menuCamera;
+			labels = new FlxTypedGroup<AtlasText>();
+			var grpText:FlxTypedGroup<AtlasText> = new FlxTypedGroup<AtlasText>();
+			controlGrid = new MenuTypedList(Columns(2), Vertical);
+			add(labels);
+			add(grpText);
+			add(controlGrid);
+			if (FlxG.gamepads.numActiveGamepads > 0)
 			{
-				selectDevice(Device.Keys);
-			});
-			kbItem.x = FlxG.width / 2 - kbItem.width - 30;
-			kbItem.y = (spr.height - kbItem.height) / 2;
-			var gpItem:TextMenuItem = deviceList.createItem(null, null, 'Gamepad', Bold, function()
-			{
-				selectDevice(Device.Gamepad(FlxG.gamepads.firstActive.id));
-			});
-			gpItem.x = FlxG.width / 2 + 30;
-			gpItem.y = (spr.height - gpItem.height) / 2;
-		}
-		var ypos:Int = (deviceList == null) ? 30 : 120;
-		var curSection:String = null;
-		for (ctrl in controlList)
-		{
-			var name:String = ctrl.getName();
-			if (curSection != 'UI_' && name.indexOf('UI_') == 0)
-			{
-				curSection = 'UI_';
-				var sectionText:AtlasText = new AtlasText(0, ypos, 'UI', Bold);
-				grpText.add(sectionText).screenCenter(X);
-				ypos += 70;
+				var spr:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 100, 0xFFFAFD6D);
+				add(spr);
+				deviceList = new TextMenuList(Horizontal, None);
+				add(deviceList);
+				deviceListSelected = true;
+				var kbItem:TextMenuItem = deviceList.createItem(null, null, 'Keyboard', Bold, function() { selectDevice(Device.Keys); });
+				kbItem.x = FlxG.width / 2 - kbItem.width - 30;
+				kbItem.y = (spr.height - kbItem.height) / 2;
+				var gpItem:TextMenuItem = deviceList.createItem(null, null, 'Gamepad', Bold, function() { selectDevice(Device.Gamepad(FlxG.gamepads.firstActive.id)); });
+				gpItem.x = FlxG.width / 2 + 30;
+				gpItem.y = (spr.height - gpItem.height) / 2;
 			}
-			else if (curSection != 'NOTE_' && name.indexOf('NOTE_') == 0)
+			var ypos:Int = (deviceList == null) ? 30 : 120;
+			var curSection:String = null;
+			for (ctrl in controlList)
 			{
-				curSection = 'NOTE_';
-				var sectionText:AtlasText = new AtlasText(0, ypos, 'NOTES', Bold);
-				grpText.add(sectionText).screenCenter(X);
-				ypos += 70;
-			}
-			if (curSection != null && name.indexOf(curSection) == 0)
-			{
-				name = name.substr(curSection.length);
-			}
-			var text:AtlasText = new AtlasText(150, ypos, name, Bold);
-			text = labels.add(text);
-			text.alpha = 0.6;
-			createItem(text.x + 400, ypos, ctrl, 0);
-			createItem(text.x + 400 + 300, ypos, ctrl, 1);
-			ypos += 70;
-		}
-		camFollow = new FlxObject(FlxG.width / 2, 0, 70, 70);
-		if (deviceList != null)
-		{
-			camFollow.y = deviceList.members[deviceList.selectedIndex].y;
-			controlGrid.members[controlGrid.selectedIndex].idle();
-			controlGrid.enabled = false;
-		}
-		else
-		{
-			camFollow.y = controlGrid.members[controlGrid.selectedIndex].y;
-		}
-		menuCamera.follow(camFollow, null, 0.06);
-		menuCamera.deadzone.set(0, 100, menuCamera.width, menuCamera.height - 200);
-		menuCamera.minScrollY = 0;
-		controlGrid.onChange.add(function(item:InputItem)
-		{
-			camFollow.y = item.y;
-			labels.forEach(function(text:AtlasText)
-			{
+				var name:String = ctrl.getName();
+				if (curSection != 'UI_' && name.indexOf('UI_') == 0)
+				{
+					curSection = 'UI_';
+					var sectionText:AtlasText = new AtlasText(0, ypos, 'UI', Bold);
+					grpText.add(sectionText).screenCenter(X);
+					ypos += 70;
+				}
+				else if (curSection != 'NOTE_' && name.indexOf('NOTE_') == 0)
+				{
+					curSection = 'NOTE_';
+					var sectionText:AtlasText = new AtlasText(0, ypos, 'NOTES', Bold);
+					grpText.add(sectionText).screenCenter(X);
+					ypos += 70;
+				}
+				if (curSection != null && name.indexOf(curSection) == 0) name = name.substr(curSection.length);
+				var text:AtlasText = new AtlasText(150, ypos, name, Bold);
+				text = labels.add(text);
 				text.alpha = 0.6;
+				createItem(text.x + 400, ypos, ctrl, 0);
+				createItem(text.x + 400 + 300, ypos, ctrl, 1);
+				ypos += 70;
+			}
+			camFollow = new FlxObject(FlxG.width / 2, 0, 70, 70);
+			if (deviceList != null)
+			{
+				camFollow.y = deviceList.members[deviceList.selectedIndex].y;
+				controlGrid.members[controlGrid.selectedIndex].idle();
+				controlGrid.enabled = false;
+			}
+			else camFollow.y = controlGrid.members[controlGrid.selectedIndex].y;
+			menuCamera.follow(camFollow, null, 0.06);
+			menuCamera.deadzone.set(0, 100, menuCamera.width, menuCamera.height - 200);
+			menuCamera.minScrollY = 0;
+			controlGrid.onChange.add(function(item:InputItem)
+			{
+				camFollow.y = item.y;
+				labels.forEach(function(text:AtlasText) { text.alpha = 0.6; });
+				labels.members[Std.int(controlGrid.selectedIndex / 2)].alpha = 1;
 			});
-			labels.members[Std.int(controlGrid.selectedIndex / 2)].alpha = 1;
-		});
-		prompt = new Prompt('\nPress any key to rebind\n\n\n\n    Escape to cancel', None);
-		prompt.create();
-		prompt.createBgFromMargin(100, 0xFFFAFD6D);
-		prompt.back.scrollFactor.set(0, 0);
-		prompt.exists = false;
-		add(prompt);
-	}
+			prompt = new Prompt('\nPress any key to rebind\n\n\n\n    Escape to cancel', None);
+			prompt.create();
+			prompt.createBgFromMargin(100, 0x00000000);
+			prompt.back.scrollFactor.set(0, 0);
+			prompt.exists = false;
+			add(prompt);
+		}
 
 	function createItem(?x:Float = 0, ?y:Float = 0, control:Control, index:Int)
 	{

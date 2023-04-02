@@ -4,6 +4,21 @@ Eterhox Engine changelogs and stuff.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# 0.4.4 Update
+### What's New?
+- Audio offset (Kinda of working, you might need to load into a song and then return back to the state.)
+- Input system improveemnts
+- Cleanup on PlayState 
+- Engine optimizations
+- FPS is now visable although you can't disable it (eventually you can disable/enable it soon.)
+- last option in PauseSubState now says "Exit Song" 
+
+### What's Removed?
+- FPS Option
+
+### Coming Soon
+- The ability to enable or disable the FPS Counter
+
 # 0.4.3 Update
 ### What's New?
 - Audio Offset (didn't make it but just enabled the code -- It's broken)
@@ -47,6 +62,5 @@ Still learning how to code in Haxe, I'll get there, just not today of course.
 # Credits
 - KadeDev -- [Kade Engine](https://github.com/KadeDev/Kade-Engine/)
 (trying to go based off Kade Engine)
-- ShadowMario -- [Psych Engine](https://github.com/ShadowMario/FNF-PsychEngine/)
-(versionshit text and FPS)
-
+- sqirra-rng -- [Izzy Engine](https://github.com/gedehari/IzzyEngine)
+(Crash Handler)

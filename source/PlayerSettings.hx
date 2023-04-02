@@ -7,65 +7,50 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxSignal;
 
-// import ui.DeviceManager;
-// import props.Player;
-class PlayerSettings
-{
-	static public var numPlayers(default, null) = 0;
-	// static public var numAvatars(default, null) = 0;
-	static public var player1(default, null):PlayerSettings;
-	static public var player2(default, null):PlayerSettings;
+class PlayerSettings {
+    static public var numPlayers(default, null) = 0;
+    static public var player1(default, null):PlayerSettings;
+    static public var player2(default, null):PlayerSettings;
 
-	#if (haxe >= "4.0.0")
-	static public final onAvatarAdd = new FlxTypedSignal<PlayerSettings->Void>();
-	static public final onAvatarRemove = new FlxTypedSignal<PlayerSettings->Void>();
-	#else
-	static public var onAvatarAdd = new FlxTypedSignal<PlayerSettings->Void>();
-	static public var onAvatarRemove = new FlxTypedSignal<PlayerSettings->Void>();
-	#end
+    #if (haxe >= "4.0.0")
+    static public final onAvatarAdd = new FlxTypedSignal<PlayerSettings->Void>();
+    static public final onAvatarRemove = new FlxTypedSignal<PlayerSettings->Void>();
+    #else
+    static public var onAvatarAdd = new FlxTypedSignal<PlayerSettings->Void>();
+    static public var onAvatarRemove = new FlxTypedSignal<PlayerSettings->Void>();
+    #end
 
-	public var id(default, null):Int;
+    public var id(default, null):Int;
+    #if (haxe >= "4.0.0")
+    public final controls:Controls;
+    #else
+    public var controls:Controls;
+    #end
 
-	#if (haxe >= "4.0.0")
-	public final controls:Controls;
-	#else
-	public var controls:Controls;
-	#end
+    function new(id) {
+        this.id = id;
+        controls = new Controls('player$id', KeyboardScheme.None);
+        var setDefault:Bool = true;
+        var saveControls = FlxG.save.data.controls;
+        if (saveControls != null) {
+            var keys = null;
+            if (id == 0 && saveControls.p1 != null && saveControls.p1.keys != null) {
+                keys = saveControls.p1.keys;
+            } else if (id == 1 && saveControls.p2 != null && saveControls.p2.keys != null) {
+                keys = saveControls.p2.keys;
+            }
+            if (keys != null) {
+                setDefault = false;
+                trace('loaded key data: ${Json.stringify(keys)}');
+                controls.fromSaveData(keys, Device.Keys);
+            }
+        }
+        if (setDefault) {
+            controls.setKeyboardScheme(KeyboardScheme.Solo);
+        }
+    }
 
-	// public var avatar:Player;
-	// public var camera(get, never):PlayCamera;
-
-	function new(id)
-	{
-		this.id = id;
-		controls = new Controls('player$id', KeyboardScheme.None);
-		var setDefault:Bool = true;
-		var saveControls = FlxG.save.data.controls;
-		if (saveControls != null)
-		{
-			var keys = null;
-			if (id == 0 && saveControls.p1 != null && saveControls.p1.keys != null)
-			{
-				keys = saveControls.p1.keys;
-			}
-			else if (id == 1 && saveControls.p2 != null && saveControls.p2.keys != null)
-			{
-				keys = saveControls.p2.keys;
-			}
-			if (keys != null)
-			{
-				setDefault = false;
-				trace('loaded key data: ' + Json.stringify(keys));
-				controls.fromSaveData(keys, Device.Keys);
-			}
-		}
-		if (setDefault)
-		{
-			controls.setKeyboardScheme(KeyboardScheme.Solo);
-		}
-	}
-
-	public function addGamepad(pad:FlxGamepad):Void {
+    public function addGamepad(pad:FlxGamepad):Void {
         var setDefault:Bool = true;
         var saveControls = FlxG.save.data.controls;
         if (saveControls != null) {
