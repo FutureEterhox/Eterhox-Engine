@@ -297,7 +297,7 @@ class TitleState extends MusicBeatState
 		// time to check if Eterhox Engine is outdated
 		trace("Checking Eterhox Engine's Github page");
 
-		var http = new haxe.Http("https://raw.githubusercontent.com/Bloxee/Eterhox-Engine/main/verBuild");
+		var http = new haxe.Http("https://raw.githubusercontent.com/Eterhox/Eterhox-Engine/main/verBuild");
 
 		http.onData = function(data:String) {
 			var latestVersion = data.split('\n')[0].trim();
@@ -314,8 +314,8 @@ class TitleState extends MusicBeatState
 					trace("Ahahaha stupid idiot is using an old engine, couldn't be me.");
 					
 					#if desktop
-					var rpcDetails = "Player is using an outdated version of Eterhox Engine";
-					DiscordClient.changePresence("This bitch lives on a rock lmfao", rpcDetails);
+					var rpcDetails = "Crying like an idiot";
+					DiscordClient.changePresence("Using an outdated engine - Eterhox Engine", rpcDetails);
 					#end
 				}
 			} else {
@@ -327,7 +327,7 @@ class TitleState extends MusicBeatState
 		};
 
 		http.onError = function(error) {
-			trace('Unable to check for update - Error Message: $error');
+			trace('Update check failed - Error Message: $error');
 			FlxG.switchState(new MainMenuState());
 		};
 
