@@ -68,6 +68,8 @@ class PlayState extends MusicBeatState
 	private var dad:Character;
 	private var gf:Character;
 	private var boyfriend:Boyfriend;
+	
+	var playerMiss:Int = 0
 
 	private var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
@@ -850,7 +852,7 @@ class PlayState extends MusicBeatState
 		healthBarBG.cameras = [camHUD];
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
-		scoreTxt.cameras = [camHUD];
+		scoreTxt.cameras = [camHUD]; // Make the scoreTxt zoom in when a player hits the note (on perfect)
 		doof.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
@@ -1592,7 +1594,7 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		scoreTxt.text = "Score:" + songScore;
+		scoreTxt.text = "Score:" + songScore + "Misses:" + playerMiss;
 
 		if (controls.PAUSE && startedCountdown && canPause)
 		{
@@ -2002,6 +2004,8 @@ class PlayState extends MusicBeatState
 			score = -25;
 			trace("dumbass fucking missed");
 			doSplash = false;
+			
+			playerMiss++; // Increases the miss count by 1 (It should appear in the Score stuff)
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 		{
@@ -2265,7 +2269,7 @@ class PlayState extends MusicBeatState
 		}		
 		
 		if (boyfriend.holdTimer > 0.004 * Conductor.stepCrochet && !holdingArray.contains(true) && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
-			boyfriend.playAnim('idle');
+			boyfriend.playAnim('idle'); // Is this what prevents the charater from playing its usual default miss?
 		}
 		playerStrums.forEach(function(spr:FlxSprite)
 		{
@@ -2289,6 +2293,8 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
+			playerMiss++; // Increases the Miss Counter by 1+
+			
 			health -= 0.04;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
